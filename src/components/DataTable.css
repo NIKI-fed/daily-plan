@@ -73,18 +73,13 @@
   /* Фиксированная ширина столбцов */
 .data-table th:nth-child(1),
 .data-table td:nth-child(1) {
-    width: 80px;
-    min-width: 80px;
-    max-width: 80px;
+    width: 150px;
+    min-width: 150px;
+    max-width: 150px;
 }
 
 .data-table th:nth-child(2),
-.data-table td:nth-child(2) {
-    width: 70px;
-    min-width: 70px;
-    max-width: 70px;
-}
-
+.data-table td:nth-child(2),
 .data-table th:nth-child(3),
 .data-table td:nth-child(3) {
     width: 50px;
@@ -94,42 +89,98 @@
 
 .data-table th:nth-child(4),
 .data-table td:nth-child(4) {
-    width: 400px;
-    min-width: 400px;
-    max-width: 400px;
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
 }
 
 .data-table th:nth-child(5),
 .data-table td:nth-child(5) {
-    width: 80px;
-    min-width: 80px;
-    max-width: 80px;
+    width: 60px;
+    min-width: 60px;
+    max-width: 60px;
 }
 
 .data-table th:nth-child(6),
 .data-table td:nth-child(6) {
-    width: 80px;
-    min-width: 80px;
-    max-width: 80px;
+    width: 60px;
+    min-width: 60px;
+    max-width: 60px;
 }
 
 .data-table th:nth-child(7),
 .data-table td:nth-child(7) {
-    width: 200px;
-    min-width: 200px;
-    max-width: 200px;
+    width: 40px;
+    min-width: 40px;
+    max-width: 40px;
 }
 
 .data-table th:nth-child(8),
 .data-table td:nth-child(8) {
-    width: 80px;
-    min-width: 80px;
-    max-width: 80px;
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
 }
 
 .data-table th:nth-child(9),
 .data-table td:nth-child(9) {
+    width: 60px;
+    min-width: 60px;
+    max-width: 60px;
+}
+
+.data-table th:nth-child(10),
+.data-table td:nth-child(10) {
     width: 100px;
     min-width: 100px;
     max-width: 100px;
+}
+
+.data-table th:nth-child(11),
+.data-table td:nth-child(11) {
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
+}
+
+.data-table th:nth-child(12),
+.data-table td:nth-child(12) {
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
+}
+
+.data-table th:nth-child(13),
+.data-table td:nth-child(13) {
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
+}
+
+.data-table th:nth-child(14),
+.data-table td:nth-child(14) {
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
+}
+
+.data-table th:nth-child(15),
+.data-table td:nth-child(15) {
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
+}
+
+.data-table th:nth-child(16),
+.data-table td:nth-child(16) {
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
+}
+
+.data-table th:nth-child(17),
+.data-table td:nth-child(17) {
+    width: 50px;
+    min-width: 50px;
+    max-width: 50px;
 }

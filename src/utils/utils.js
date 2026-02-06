@@ -45,3 +45,15 @@ export const safeToFixed = (value) => {
     }
     return num.toFixed(2);
 };
+
+// Функция для суммирования volume_concrete
+export const totalVolumeConcrete = (items) => {
+    return items.reduce((sum, item) => {
+        const volume = item.volume_concrete;
+        if (volume === null || volume === "") {
+            return sum;
+        }
+        const volumeNum = parseFloat(volume);
+        return (sum + (isNaN(volumeNum) ? 0 : volumeNum));
+    }, 0);
+};

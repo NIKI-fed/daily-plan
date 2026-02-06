@@ -13,8 +13,8 @@ function App() {
 
         // await new Promise(resolve => setTimeout(resolve, 1000));
 
-        // const response = await fetch('/dataTest2.txt');
-        const response = await fetch('/api/waybills_report_json');
+        const response = await fetch('/dataTest.txt');
+        // const response = await fetch('/api/daily_plan_data');
         if (!response.ok) {
           throw new Error('Не удалось загрузить данные');
         }
@@ -34,6 +34,8 @@ function App() {
     fetchData();
   }, []);
 
+  // console.log(data)
+
   if (loading) {
     return <div className="loading">Загрузка данных...</div>;
   }
@@ -45,7 +47,12 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Ежемесячный отчёт по объектам</h1>
+        <h1>{new Date().toLocaleDateString('ru-RU', {
+  weekday: 'long',
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+})}</h1>
       </header>
       
       <main>
