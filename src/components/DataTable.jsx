@@ -5,7 +5,7 @@ import { groupBy, safeToFixed } from "../utils/utils";
 const DataTable = ({ data }) => {
 
     const groupData = (data) => {
-        // Группировка по corporate_person
+        // Группировка по corporate_person и их сортировка по алфавиту
         const groupedByCorporate = groupBy(data, "corporate_person", "Без категории");
         const sortedCorporate = Object.keys(groupedByCorporate).sort();
 
@@ -21,8 +21,22 @@ const DataTable = ({ data }) => {
                 items: corporateItems
             });
 
+            // Сортировка, игнорирующая начальные спецсимволы
+            const sortedCorporateItems = [...corporateItems].sort((a, b) => {
+                const getSortKey = (str) => {
+                    if (!str) return "";
+                    // Убираем всё до первой буквы
+                    const match = str.match(/[а-яА-Яa-zA-Z].*/);
+                    return match ? match[0] : str;
+                };
+                
+                const keyA = getSortKey(a.client_name || "");
+                const keyB = getSortKey(b.client_name || "");
+                return keyA.localeCompare(keyB, 'ru');
+            });
+
             // Добавляем все элементы группы
-            corporateItems.forEach((item) => {
+            sortedCorporateItems.forEach((item) => {
                 result.push({
                     type: "item",
                     data: item
@@ -30,17 +44,17 @@ const DataTable = ({ data }) => {
             });
 
             // Вычисляем общие суммы для corporate_person
-            const corporateVolume = corporateItems.reduce((sum, item) => sum + (Number(item.volume) || 0), 0);
             const corporateVolumeConcrete = corporateItems.reduce((sum, item) => sum + (Number(item.volume_concrete) || 0), 0);
+            const corporateVolumeMortar = corporateItems.reduce((sum, item) => sum + (Number(item.volume_mortar) || 0), 0);
             
-            // Вычисляем сумму сумм (volume + volume_concrete)
-            const sumOfSums = corporateVolume + corporateVolumeConcrete;
+            // Вычисляем сумму сумм (volume_concrete + volume_mortar)
+            const sumOfSums = corporateVolumeConcrete + corporateVolumeMortar;
 
-            // Добавляем итог по volume и volume_concrete
+            // Добавляем итог по volume_concrete + volume_mortar
             result.push({
                 type: "corporate_total",
-                volume: corporateVolume,
-                volume_concrete: corporateVolumeConcrete
+                volume_concrete: corporateVolumeConcrete,
+                volume_mortar: corporateVolumeMortar,
             });
             
             // Добавляем сумму сумм отдельной строкой
@@ -55,31 +69,33 @@ const DataTable = ({ data }) => {
 
     const flattenedData = groupData(data);
 
+    // console.log(flattenedData)
+
     const renderRow = (row, rowIndex) => {
         switch (row.type) {
             case "corporate_person":
                 return (
-                    <tr key={`corporate_person-${row.name}-${rowIndex}`} className="group-row corporate_person-row">
-                        <td className="group-title" colSpan="17">{`Заявки ${row.name}`}</td>
+                    <tr key={`corporate_person-${row.name}-${rowIndex}`} className="corporate_person-row">
+                        <td className="group-title" colSpan="15">{`Заявки ${row.name}`}</td>
                     </tr>
                 );
 
             case "corporate_total":
                 return (
-                    <tr key={`corporate-total-${rowIndex}`} className="total-row corporate-total">
-                        <td className="total-label"></td>
-                        <td className="total-volume">{safeToFixed(row.volume)}</td>
+                    <tr key={`corporate-total-${rowIndex}`} className="corporate-total">
+                        <td></td>
                         <td className="total-volume-concrete">{safeToFixed(row.volume_concrete)}</td>
-                        <td colSpan="14"></td>
+                        <td className="total-volume-mortar">{safeToFixed(row.volume_mortar)}</td>
+                        <td colSpan="12"></td>
                     </tr>
                 );
                 
             case "sum_of_sums":
                 return (
-                    <tr key={`sum-of-sums-${rowIndex}`} className="total-row sum-of-sums-row">
+                    <tr key={`sum-of-sums-${rowIndex}`} className="sum-of-sums-row">
                         <td className="sum-label"></td>
                         <td className="sum-of-sums-value" colSpan="2">{safeToFixed(row.value)}</td>
-                        <td colSpan="14"></td>
+                        <td colSpan="12"></td>
                     </tr>
                 );
 
@@ -97,23 +113,21 @@ const DataTable = ({ data }) => {
 
                 return (
                     <tr key={uniqueKey} className="detail-row">
-                        <td className="client_name">{item.client_name || "-"}</td>
-                        <td className="volume">{safeToFixed(item.volume)}</td>
-                        <td className="volume_concrete">{safeToFixed(item.volume_concrete)}</td>
-                        <td className="class">{item.class || "-"}</td>
-                        <td className="additions_antifreeze">{item.additions_antifreeze || "-"}</td>
-                        <td className="mobility">{item.mobility || "-"}</td>
-                        <td>???</td>
-                        <td>???</td>
-                        <td className="additions_chemical">{item.additions_chemical || "-"}</td>
-                        <td>???</td>
-                        <td>???</td>
-                        <td>???</td>
-                        <td className="unloading_method">{unloadingMethodFormatted}</td>
-                        <td className="address">{item.address || "-"}</td>
-                        <td className="manager">{item.manager || "-"}</td>
-                        <td className="phone">{item.phone || "-"}</td>
-                        <td>???</td>
+                        <td>{item.client_name || "-"}</td>
+                        <td>{safeToFixed(item.volume_concrete)}</td>
+                        <td>{safeToFixed(item.volume_mortar)}</td>
+                        <td>{item.class || "-"}</td>
+                        <td>{item.filler_client || "-"}</td>
+                        <td>{item.mobility || "-"}</td>
+                        <td>{item.waterproofness || "-"}</td>
+                        <td>{item.frost_resistance || "-"}</td>
+                        <td>{item.additions_chemical || "-"}</td>
+                        <td>{item.min_timestamp_target || "-"}</td>
+                        <td>{item.all_timestamps_formatted || "-"}</td>
+                        <td>{unloadingMethodFormatted}</td>
+                        <td>{item.address || "-"}</td>
+                        <td>{(item.responsible_person_name) || "-"}</td>
+                        <td>{item.fillers_production || "-"}</td>
                     </tr>
                 );
 
@@ -126,24 +140,22 @@ const DataTable = ({ data }) => {
         <div className="data-table-container">
             <table className="data-table">
                 <thead>
-                    <tr style={{ height: '100px', wordWrap: 'break-word', verticalAlign: 'top' }}>
-                        <th>client_name</th>
-                        <th>volume</th>
-                        <th>volume_concrete</th>
-                        <th>class</th>
-                        <th>additions_antifreeze</th>
-                        <th>mobility</th>
-                        <th>???</th>
-                        <th>???</th>
-                        <th>additions_chemical</th>
-                        <th>???</th>
-                        <th>???</th>
-                        <th>???</th>
-                        <th>unloading_method</th>
-                        <th>address</th>
-                        <th>manager</th>
-                        <th>phone</th>
-                        <th>???</th>
+                    <tr className="data-table-head">
+                        <th>Клиент</th>
+                        <th>Бетон</th>
+                        <th>Раствор</th>
+                        <th>Класс</th>
+                        <th>Заполнитель</th>
+                        <th>Подвижность</th>
+                        <th>W</th>
+                        <th>F</th>
+                        <th>Добавки</th>
+                        <th>Время</th>
+                        <th>Интервал</th>
+                        <th>Разгрузка</th>
+                        <th>Адрес</th>
+                        <th>Ответственные</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>

@@ -13,8 +13,8 @@ function App() {
 
         // await new Promise(resolve => setTimeout(resolve, 1000));
 
-        const response = await fetch('/dataTest.txt');
-        // const response = await fetch('/api/daily_plan_data');
+        // const response = await fetch('/dataTest.txt');
+        const response = await fetch('/api/daily_plan_data');
         if (!response.ok) {
           throw new Error('Не удалось загрузить данные');
         }
