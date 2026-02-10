@@ -48,11 +48,11 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>{new Date().toLocaleDateString('ru-RU', {
-  weekday: 'long',
-  year: 'numeric',
-  month: 'long',
-  day: 'numeric'
-})}</h1>
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        })}</h1>
       </header>
       
       <main>

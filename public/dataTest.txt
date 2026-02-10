@@ -156,7 +156,7 @@
       "min_timestamp_target": "07:00",
       "mobility": "П4",
       "name": null,
-      "notes": "АБН 42м",
+      "notes": "АБН 42мgjghjghjghjghjghjghjghl;';lhjjghjghj",
       "object_id": 71,
       "object_name": "Сарансктехприбор",
       "phone": null,

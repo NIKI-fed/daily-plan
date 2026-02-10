@@ -10,6 +10,7 @@ const DataTable = ({ data }) => {
         const sortedCorporate = Object.keys(groupedByCorporate).sort();
 
         const result = [];
+        let dailyTotal = 0; // Общая сумма за весь день по всем клиентам
 
         sortedCorporate.forEach((corporate) => {
             const corporateItems = groupedByCorporate[corporate];
@@ -50,6 +51,9 @@ const DataTable = ({ data }) => {
             // Вычисляем сумму сумм (volume_concrete + volume_mortar)
             const sumOfSums = corporateVolumeConcrete + corporateVolumeMortar;
 
+            // Добавляем к общей сумме за день
+            dailyTotal += sumOfSums;
+
             // Добавляем итог по volume_concrete + volume_mortar
             result.push({
                 type: "corporate_total",
@@ -64,38 +68,53 @@ const DataTable = ({ data }) => {
             });
         });
 
+        // Добавляем общую сумму за весь день
+        result.push({
+            type: "daily_total",
+            value: dailyTotal
+        });
+
         return result;
     };
 
     const flattenedData = groupData(data);
 
-    // console.log(flattenedData)
+    console.log(flattenedData)
 
     const renderRow = (row, rowIndex) => {
         switch (row.type) {
             case "corporate_person":
                 return (
                     <tr key={`corporate_person-${row.name}-${rowIndex}`} className="corporate_person-row">
-                        <td className="group-title" colSpan="15">{`Заявки ${row.name}`}</td>
+                        <td className="group-title" colSpan="17">{`Заявки ${row.name}`}</td>
                     </tr>
                 );
 
-            case "corporate_total":
-                return (
-                    <tr key={`corporate-total-${rowIndex}`} className="corporate-total">
-                        <td></td>
-                        <td className="total-volume-concrete">{safeToFixed(row.volume_concrete)}</td>
-                        <td className="total-volume-mortar">{safeToFixed(row.volume_mortar)}</td>
-                        <td colSpan="12"></td>
-                    </tr>
-                );
+            // case "corporate_total":
+            //     return (
+            //         <tr key={`corporate-total-${rowIndex}`} className="corporate-total">
+            //             <td></td>
+            //             <td className="total-volume-concrete">{safeToFixed(row.volume_concrete)}</td>
+            //             <td className="total-volume-mortar">{safeToFixed(row.volume_mortar)}</td>
+            //             <td colSpan="14"></td>
+            //         </tr>
+            //     );
                 
-            case "sum_of_sums":
+            // case "sum_of_sums":
+            //     return (
+            //         <tr key={`sum-of-sums-${rowIndex}`} className="sum-of-sums-row">
+            //             <td></td>
+            //             <td className="sum-of-sums-value" colSpan="2">{safeToFixed(row.value)}</td>
+            //             <td colSpan="14"></td>
+            //         </tr>
+            //     );
+
+            case "daily_total":
                 return (
-                    <tr key={`sum-of-sums-${rowIndex}`} className="sum-of-sums-row">
-                        <td className="sum-label"></td>
-                        <td className="sum-of-sums-value" colSpan="2">{safeToFixed(row.value)}</td>
-                        <td colSpan="12"></td>
+                    <tr key={`daily_total-${rowIndex}`} className="daily_total-row">
+                        <td></td>
+                        <td className="daily_total-value big-font" colSpan="2">{safeToFixed(row.value)}</td>
+                        <td colSpan="14"></td>
                     </tr>
                 );
 
@@ -114,20 +133,22 @@ const DataTable = ({ data }) => {
                 return (
                     <tr key={uniqueKey} className="detail-row">
                         <td>{item.client_name || "-"}</td>
-                        <td>{safeToFixed(item.volume_concrete)}</td>
-                        <td>{safeToFixed(item.volume_mortar)}</td>
-                        <td>{item.class || "-"}</td>
+                        <td className="big-font">{safeToFixed(item.volume_concrete)}</td>
+                        <td className="big-font">{safeToFixed(item.volume_mortar)}</td>
+                        <td className="big-font">{item.class || "-"}</td>
                         <td>{item.filler_client || "-"}</td>
-                        <td>{item.mobility || "-"}</td>
+                        <td className="big-font">{item.mobility || "-"}</td>
                         <td>{item.waterproofness || "-"}</td>
                         <td>{item.frost_resistance || "-"}</td>
+                        <td>{item.additions_antifreeze || "-"}</td>
                         <td>{item.additions_chemical || "-"}</td>
+                        <td>{item.notes || "-"}</td>
                         <td>{item.min_timestamp_target || "-"}</td>
                         <td>{item.all_timestamps_formatted || "-"}</td>
                         <td>{unloadingMethodFormatted}</td>
                         <td>{item.address || "-"}</td>
                         <td>{(item.responsible_person_name) || "-"}</td>
-                        <td>{item.fillers_production || "-"}</td>
+                        <td className="big-font">{item.fillers_production || "-"}</td>
                     </tr>
                 );
 
@@ -145,11 +166,13 @@ const DataTable = ({ data }) => {
                         <th>Бетон</th>
                         <th>Раствор</th>
                         <th>Класс</th>
-                        <th>Заполнитель</th>
-                        <th>Подвижность</th>
+                        <th className="small-font">Заполнитель</th>
+                        <th className="small-font">Подвижность</th>
                         <th>W</th>
                         <th>F</th>
+                        <th>ПНД</th>
                         <th>Добавки</th>
+                        <th>Примечание</th>
                         <th>Время</th>
                         <th>Интервал</th>
                         <th>Разгрузка</th>

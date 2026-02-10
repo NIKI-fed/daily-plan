@@ -2,6 +2,11 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  /* ОСНОВНАЯ ПЕРЕМЕННАЯ - меняя её, меняется вся таблица пропорционально */
+  --table-total-width: 1754px;
+  /* Коэффициент для пересчета: 1754px / 284мм ≈ 6.176 284мм- ширина таблицы на скане */ 
+  --mm-to-px: calc(var(--table-total-width) / 284);
 }
 
 body {
@@ -14,7 +19,7 @@ body {
 }
 
 .loading, .error {
-  width: 1440px;
+  width: var(--table-total-width);
   margin: 20px auto;
   padding: 40px;
   text-align: center;
@@ -29,7 +34,7 @@ body {
 }
 
 .App-header {
-  width: 1440px;
+  width: calc(var(--table-total-width) + 40px);
   margin: 20px auto 0 auto;
   background-color: #fff;
   padding: 20px;
